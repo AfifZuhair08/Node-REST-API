@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    username:{
+    username: {
         type: String,
         require: true,
         unique: true
     },
-    email:{
+    email: {
         type: String,
         required: true,
         max: 50,
         unique: true
     },
-    password:{
+    password: {
         type: String,
         required: true,
         min: 6
     },
-    profilePicture: { 
+    profilePicture: {
         type: String,
         default: ""
     },
@@ -36,8 +36,24 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
-},{timestamps: true}
+    },
+    desc: {
+        type: String,
+        max: 50
+    },
+    city: {
+        type: String,
+        max: 50
+    },
+    from: {
+        type: String,
+        max: 50
+    },
+    relationship: {
+        type: Number,
+        enum: [1,2,3],
+    },
+}, { timestamps: true }
 );
 
 module.exports = mongoose.model("User", userSchema);
