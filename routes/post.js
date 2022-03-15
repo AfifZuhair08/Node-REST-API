@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
 
 // Update a post
 // @desc    Create post
-// @route   POST /api/post/
+// @route   POST /api/post/:id
 // @access  Private
 router.put("/:id", async (req, res) => {
     const post = await Post.findById(req.params.id);
@@ -72,7 +72,7 @@ router.put("/:id", async (req, res) => {
 
 // Delete a post
 // @desc    Create post
-// @route   POST /api/post/
+// @route   POST /api/post/:id
 // @access  Private
 router.delete("/:id", async (req, res) => {
     const post = await Post.findById(req.params.id);
@@ -88,9 +88,9 @@ router.delete("/:id", async (req, res) => {
     }
 })
 
-// Like a post
+// Like or dislike a post
 // @desc    Create post
-// @route   POST /api/post/
+// @route   POST /api/post/:id/like
 // @access  Private
 router.put("/:id/like", async (req, res) => {
     try {
@@ -108,13 +108,13 @@ router.put("/:id/like", async (req, res) => {
 })
 
 
-// Get timeline post
+// Get timeline post of all user
 // @desc    Create post
-// @route   POST /api/post/
+// @route   POST /api/post/timeline/:userID
 // @access  Public
-router.get("/timeline/all", async (req, res) => {
+router.get("/timeline/:userID", async (req, res) => {
     try {
-        const currUser = await User.findById(req.body.userID);
+        const currUser = await User.findById(req.params.userID);
         const userPosts = await Post.find({ userID: currUser._id });
 
         const friendPosts = await Promise.all(
@@ -123,7 +123,21 @@ router.get("/timeline/all", async (req, res) => {
             })
         );
 
-        res.json(userPosts.concat(...friendPosts))
+        res.status(200).json(userPosts.concat(...friendPosts))
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+// Get timeline post of the user
+// @desc    Create post
+// @route   POST /api/post/profile/username
+// @access  Public
+router.get("/profile/:username", async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username });
+        const posts = await Post.find({ userID: user._id });
+        res.status(200).json(posts);
     } catch (err) {
         res.status(500).json(err);
     }
