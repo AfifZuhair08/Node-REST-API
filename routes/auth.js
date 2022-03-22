@@ -38,7 +38,7 @@ router.post("/register", async (req,res)=>{
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-router.get("/login", async (req,res)=>{
+router.post("/login", async (req,res)=>{
     try{
         // find email
         const userDetails = await User.findOne({ email: req.body.email });
